@@ -1,0 +1,39 @@
+import React, { useContext, useState } from "react";
+import classes from "./Toolbar.module.css";
+import cx from "classnames";
+import { FaSlash } from "react-icons/fa";
+import { LuRectangleHorizontal } from "react-icons/lu";
+import Lottie from "lottie-react";
+import animation from "../../assets/animation.json";
+import BoardContext from "../../store/board-context";
+import { TOOL_ITEMS } from "../../constants";
+
+const Toolbar = () => {
+  const { activeTool, handleToolClick } = useContext(BoardContext);
+
+  return (
+    <div className={`${classes.container} absolute`}>
+      <div className=" mx-2 relative -bottom-[14px] w-14">
+        <Lottie animationData={animation} />
+      </div>
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.LINE,
+        })}
+        onClick={() => handleToolClick(TOOL_ITEMS.LINE)}
+      >
+        <FaSlash />
+      </div>
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.RECTANGLE,
+        })}
+        onClick={() => handleToolClick(TOOL_ITEMS.RECTANGLE)}
+      >
+        <LuRectangleHorizontal />
+      </div>
+    </div>
+  );
+};
+
+export default Toolbar;

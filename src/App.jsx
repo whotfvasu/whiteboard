@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect, useRef } from "react";
+import Board from "./components/Board/Board";
+import Toolbar from "./components/Toolbar/Toolbar";
+import BoardProvider from "./store/BoardProvider";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <BoardProvider>
+      <Toolbar />
+      <Board />
+    </BoardProvider>
+  );
+};
 
-export default App
+export default App;

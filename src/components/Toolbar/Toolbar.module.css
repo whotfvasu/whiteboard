@@ -1,0 +1,16 @@
+.container {
+  @apply absolute left-1/2 top-5 px-2 h-14 flex rounded-2xl border-[1px] border-black;
+  transform: translateX(-50%);
+}
+
+.toolItem {
+  @apply flex justify-center items-center text-xl px-2 my-2 text-black mr-5 last:mr-0 cursor-pointer;
+}
+
+.toolItem:hover {
+  @apply  border-gray-300 text-gray-700 rounded-xl;
+}
+
+.toolItem.active {
+  @apply border-[0.5px] border-black text-gray-700 rounded-xl;
+}
