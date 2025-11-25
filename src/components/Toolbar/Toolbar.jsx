@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import classes from "./Toolbar.module.css";
 import cx from "classnames";
-import { FaSlash } from "react-icons/fa";
+import { FaSlash, FaRegCircle } from "react-icons/fa";
 import { LuRectangleHorizontal } from "react-icons/lu";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation.json";
@@ -31,6 +31,14 @@ const Toolbar = () => {
         onClick={() => changeToolHandler(TOOL_ITEMS.RECTANGLE)}
       >
         <LuRectangleHorizontal />
+      </div>
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.CIRCLE,
+        })}
+        onClick={() => changeToolHandler(TOOL_ITEMS.CIRCLE)}
+      >
+        <FaRegCircle/>
       </div>
     </div>
   );
