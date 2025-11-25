@@ -1,5 +1,6 @@
-import { TOOL_ITEMS } from "../constants";
+import { ARROW_LENGTH, TOOL_ITEMS } from "../constants";
 import rough from "roughjs/bin/rough";
+import { getArrowHeadsCoordinates } from "./math";
 
 const gen = rough.generator();
 
@@ -21,6 +22,23 @@ export const createRoughElement = (id, x1, y1, x2, y2, { type }) => {
       const width = Math.abs(x2 - x1);
       const height = Math.abs(y2 - y1);
       element.roughEle = gen.ellipse(cx, cy, width, height, options);
+      return element;
+    case TOOL_ITEMS.ARROW:
+      const { x3, y3, x4, y4 } = getArrowHeadsCoordinates(
+        x1,
+        y1,
+        x2,
+        y2,
+        ARROW_LENGTH
+      );
+      const points = [
+        [x1, y1],
+        [x2, y2],
+        [x3, y3],
+        [x2, y2],
+        [x4, y4],
+      ];
+      element.roughEle = gen.linearPath(points, options);
       return element;
     default:
       throw new Error("Unknown element type: " + type);

@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import classes from "./Toolbar.module.css";
 import cx from "classnames";
-import { FaSlash, FaRegCircle } from "react-icons/fa";
+import { FaSlash, FaRegCircle, FaArrowRight } from "react-icons/fa";
 import { LuRectangleHorizontal } from "react-icons/lu";
+import { FaArrowRightLong } from "react-icons/fa6";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation.json";
 import BoardContext from "../../store/board-context";
@@ -38,7 +39,15 @@ const Toolbar = () => {
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.CIRCLE)}
       >
-        <FaRegCircle/>
+        <FaRegCircle />
+      </div>
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.ARROW,
+        })}
+        onClick={() => changeToolHandler(TOOL_ITEMS.ARROW)}
+      >
+        <FaArrowRightLong />
       </div>
     </div>
   );

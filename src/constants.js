@@ -1,7 +1,8 @@
 export const TOOL_ITEMS = {
   LINE: "LINE",
   RECTANGLE: "RECTANGLE",
-  CIRCLE: "CIRCLE",
+    CIRCLE: "CIRCLE",
+  ARROW: "ARROW",
   TEXT: "TEXT",
   SELECT: "SELECT",
 };
@@ -17,3 +18,5 @@ export const BOARD_ACTIONS = {
   DRAW_MOVE: "DRAW_MOVE",
   DRAW_UP: "DRAW_UP",
 };
+
+export const ARROW_LENGTH = 20;
