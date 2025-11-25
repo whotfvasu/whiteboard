@@ -1,7 +1,19 @@
 export const TOOL_ITEMS = {
-    LINE: "LINE",
-    RECTANGLE: "RECTANGLE",
-    CIRCLE: "CIRCLE",
-    TEXT: "TEXT",
-    SELECT: "SELECT",
-}
+  LINE: "LINE",
+  RECTANGLE: "RECTANGLE",
+  CIRCLE: "CIRCLE",
+  TEXT: "TEXT",
+  SELECT: "SELECT",
+};
+
+export const TOOL_ACTION_TYPES = {
+  NONE: "NONE",
+  DRAWING: "DRAWING",
+};
+
+export const BOARD_ACTIONS = {
+  SET_ACTIVE_TOOL: "SET_ACTIVE_TOOL",
+  DRAW_DOWN: "DRAW_DOWN",
+  DRAW_MOVE: "DRAW_MOVE",
+  DRAW_UP: "DRAW_UP",
+};

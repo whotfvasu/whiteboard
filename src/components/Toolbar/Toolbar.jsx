@@ -9,7 +9,7 @@ import BoardContext from "../../store/board-context";
 import { TOOL_ITEMS } from "../../constants";
 
 const Toolbar = () => {
-  const { activeTool, handleToolClick } = useContext(BoardContext);
+  const { activeTool, changeToolHandler } = useContext(BoardContext);
 
   return (
     <div className={`${classes.container} absolute`}>
@@ -20,7 +20,7 @@ const Toolbar = () => {
         className={cx(classes.toolItem, {
           [classes.active]: activeTool === TOOL_ITEMS.LINE,
         })}
-        onClick={() => handleToolClick(TOOL_ITEMS.LINE)}
+        onClick={() => changeToolHandler(TOOL_ITEMS.LINE)}
       >
         <FaSlash />
       </div>
@@ -28,7 +28,7 @@ const Toolbar = () => {
         className={cx(classes.toolItem, {
           [classes.active]: activeTool === TOOL_ITEMS.RECTANGLE,
         })}
-        onClick={() => handleToolClick(TOOL_ITEMS.RECTANGLE)}
+        onClick={() => changeToolHandler(TOOL_ITEMS.RECTANGLE)}
       >
         <LuRectangleHorizontal />
       </div>
