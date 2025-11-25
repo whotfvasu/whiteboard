@@ -3,7 +3,7 @@ import classes from "./Toolbar.module.css";
 import cx from "classnames";
 import { FaSlash, FaRegCircle, FaArrowRight } from "react-icons/fa";
 import { LuRectangleHorizontal } from "react-icons/lu";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { LuArrowRight } from "react-icons/lu";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation.json";
 import BoardContext from "../../store/board-context";
@@ -47,7 +47,7 @@ const Toolbar = () => {
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.ARROW)}
       >
-        <FaArrowRightLong />
+        <LuArrowRight />
       </div>
     </div>
   );
