@@ -232,7 +232,7 @@ const BoardProvider = ({ children }) => {
     });
   };
 
-  const textAreaBlurHandler = (text, toolboxState) => {
+  const textAreaBlurHandler = (text) => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.CHANGE_TEXT,
       payload: {
