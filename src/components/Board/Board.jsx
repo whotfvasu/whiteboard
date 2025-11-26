@@ -15,6 +15,8 @@ const Board = () => {
     boardMouseMoveHandler,
     boardMouseUpHandler,
     textAreaBlurHandler,
+    undo,
+    redo,
   } = useContext(BoardContext);
 
   const { toolboxState } = useContext(ToolboxContext);
@@ -23,6 +25,23 @@ const Board = () => {
     const canvas = canvasRef.current;
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
+  }, []);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+        event.preventDefault();
+        undo();
+      }
+      if ((event.ctrlKey || event.metaKey) && event.key === "y") {
+        event.preventDefault();
+        redo();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   useLayoutEffect(() => {

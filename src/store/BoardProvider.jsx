@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from "react";
+import React, { useCallback, useContext, useReducer } from "react";
 import BoardContext from "./board-context";
 import { BOARD_ACTIONS, TOOL_ACTION_TYPES, TOOL_ITEMS } from "../constants";
 import {
@@ -241,17 +241,17 @@ const BoardProvider = ({ children }) => {
     });
   };
 
-  const boardUndoHandler = () => {
+  const boardUndoHandler = useCallback(() => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.UNDO,
     });
-  };
+  }, []);
 
-  const boardRedoHandler = () => {
+  const boardRedoHandler = useCallback(() => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.REDO,
     });
-  };
+  }, []);
 
   const boardContextValue = {
     activeTool: boardState.activeTool,
