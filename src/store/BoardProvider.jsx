@@ -177,7 +177,9 @@ const BoardProvider = ({ children }) => {
 
   const boardMouseDownHandler = (event, toolboxState) => {
     if (boardState.toolActionType === TOOL_ACTION_TYPES.WRITING) return;
+
     const { clientX, clientY } = event;
+
     if (boardState.activeTool === TOOL_ITEMS.ERASER) {
       dispatchBoardAction({
         type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
@@ -185,6 +187,7 @@ const BoardProvider = ({ children }) => {
       });
       return;
     }
+
     dispatchBoardAction({
       type: BOARD_ACTIONS.DRAW_DOWN,
       payload: {
