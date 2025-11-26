@@ -10,6 +10,7 @@ import {
   LuBrush,
   LuUndo2,
   LuRedo2,
+  LuDownload,
 } from "react-icons/lu";
 import { RiText } from "react-icons/ri";
 import Lottie from "lottie-react";
@@ -18,7 +19,16 @@ import BoardContext from "../../store/board-context";
 import { TOOL_ITEMS } from "../../constants";
 
 const Toolbar = () => {
-  const { activeTool, changeToolHandler, undo, redo } = useContext(BoardContext);
+  const { activeTool, changeToolHandler, undo, redo } =
+    useContext(BoardContext);
+  
+  const downloadHandler = () => {
+    const canvas = document.querySelector("canvas");
+    const link = document.createElement("a");
+    link.download = "board.png";
+    link.href = canvas.toDataURL();
+    link.click();
+  }
 
   return (
     <div className={`${classes.container} absolute`}>
@@ -90,6 +100,10 @@ const Toolbar = () => {
 
       <div className={classes.toolItem} onClick={redo}>
         <LuRedo2 />
+      </div>
+
+      <div className={classes.toolItem} onClick={downloadHandler}>
+        <LuDownload />
       </div>
     </div>
   );
