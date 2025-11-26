@@ -8,7 +8,8 @@ import {
   LuEraser,
   LuCircle,
   LuBrush,
-  LuBusFront,
+  LuUndo2,
+  LuRedo2,
 } from "react-icons/lu";
 import { RiText } from "react-icons/ri";
 import Lottie from "lottie-react";
@@ -17,7 +18,7 @@ import BoardContext from "../../store/board-context";
 import { TOOL_ITEMS } from "../../constants";
 
 const Toolbar = () => {
-  const { activeTool, changeToolHandler } = useContext(BoardContext);
+  const { activeTool, changeToolHandler, undo, redo } = useContext(BoardContext);
 
   return (
     <div className={`${classes.container} absolute`}>
@@ -81,6 +82,14 @@ const Toolbar = () => {
         onClick={() => changeToolHandler(TOOL_ITEMS.TEXT)}
       >
         <RiText />
+      </div>
+
+      <div className={classes.toolItem} onClick={undo}>
+        <LuUndo2 />
+      </div>
+
+      <div className={classes.toolItem} onClick={redo}>
+        <LuRedo2 />
       </div>
     </div>
   );
