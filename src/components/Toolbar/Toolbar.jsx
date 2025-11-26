@@ -4,6 +4,7 @@ import cx from "classnames";
 import { FaSlash, FaRegCircle, FaArrowRight } from "react-icons/fa";
 import { LuRectangleHorizontal } from "react-icons/lu";
 import { LuArrowRight } from "react-icons/lu";
+import { BsBrush } from "react-icons/bs";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation.json";
 import BoardContext from "../../store/board-context";
@@ -48,6 +49,15 @@ const Toolbar = () => {
         onClick={() => changeToolHandler(TOOL_ITEMS.ARROW)}
       >
         <LuArrowRight />
+      </div>
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.BRUSH,
+        })}
+        onClick={() => changeToolHandler(TOOL_ITEMS.BRUSH)}
+      >
+        <BsBrush />
+  
       </div>
     </div>
   );

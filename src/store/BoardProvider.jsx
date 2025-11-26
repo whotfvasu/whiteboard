@@ -1,8 +1,9 @@
 import React, { useContext, useReducer } from "react";
 import BoardContext from "./board-context";
 import { BOARD_ACTIONS, TOOL_ACTION_TYPES, TOOL_ITEMS } from "../constants";
-import { createRoughElement } from "../utils/Elements";
+import { createRoughElement, getSvgPathFromStroke } from "../utils/Elements";
 import ToolboxContext from "./toolbox-context";
+import getStroke from "perfect-freehand";
 
 const boardReducer = (state, action) => {
   switch (action.type) {
@@ -35,18 +36,39 @@ const boardReducer = (state, action) => {
       const { clientX: moveX, clientY: moveY } = action.payload;
       const newElements = [...state.elements];
       const index = state.elements.length - 1;
-      const { x1, y1, stroke, fill, size } = newElements[index];
-      const newElement = createRoughElement(index, x1, y1, moveX, moveY, {
-        type: state.activeTool,
-        stroke,
-        fill,
-        size,
-      });
-      newElements[index] = newElement;
-      return {
-        ...state,
-        elements: newElements,
-      };
+      const { type } = newElements[index];
+      switch (type) {
+        case TOOL_ITEMS.LINE:
+        case TOOL_ITEMS.RECTANGLE:
+        case TOOL_ITEMS.CIRCLE:
+        case TOOL_ITEMS.ARROW:
+          const { x1, y1, stroke, fill, size } = newElements[index];
+          const newElement = createRoughElement(index, x1, y1, moveX, moveY, {
+            type: state.activeTool,
+            stroke,
+            fill,
+            size,
+          });
+          newElements[index] = newElement;
+          return {
+            ...state,
+            elements: newElements,
+          };
+        case TOOL_ITEMS.BRUSH:
+          newElements[index].points = [
+            ...newElements[index].points,
+            { x: moveX, y: moveY },
+          ];
+          newElements[index].path = new Path2D(
+            getSvgPathFromStroke(getStroke(newElements[index].points))
+          );
+          return {
+            ...state,
+            elements: newElements,
+          };
+        default:
+          throw new Error("Unknown element type: " + type);
+      }
     }
 
     case BOARD_ACTIONS.DRAW_UP: {
