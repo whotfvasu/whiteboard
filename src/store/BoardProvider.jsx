@@ -1,7 +1,11 @@
 import React, { useContext, useReducer } from "react";
 import BoardContext from "./board-context";
 import { BOARD_ACTIONS, TOOL_ACTION_TYPES, TOOL_ITEMS } from "../constants";
-import { createRoughElement, getSvgPathFromStroke } from "../utils/Elements";
+import {
+  createRoughElement,
+  getSvgPathFromStroke,
+  isPointNearElement,
+} from "../utils/Elements";
 import ToolboxContext from "./toolbox-context";
 import getStroke from "perfect-freehand";
 
@@ -11,6 +15,13 @@ const boardReducer = (state, action) => {
       return {
         ...state,
         activeTool: action.payload.tool,
+      };
+    }
+
+    case BOARD_ACTIONS.CHANGE_ACTION_TYPE: {
+      return {
+        ...state,
+        toolActionType: action.payload.actionType,
       };
     }
 
@@ -71,10 +82,15 @@ const boardReducer = (state, action) => {
       }
     }
 
-    case BOARD_ACTIONS.DRAW_UP: {
+    case BOARD_ACTIONS.ERASE: {
+      const { clientX: eraseX, clientY: eraseY } = action.payload;
+      let newElements = [...state.elements];
+      newElements = newElements.filter((element) => {
+        return !isPointNearElement(element, eraseX, eraseY);
+      });
       return {
         ...state,
-        toolActionType: TOOL_ACTION_TYPES.NONE,
+        elements: newElements,
       };
     }
 
@@ -84,7 +100,7 @@ const boardReducer = (state, action) => {
 };
 
 const initialBoardState = {
-  activeTool: TOOL_ITEMS.LINE,
+  activeTool: TOOL_ITEMS.BRUSH,
   toolActionType: TOOL_ACTION_TYPES.NONE,
   elements: [],
 };
@@ -106,6 +122,13 @@ const BoardProvider = ({ children }) => {
 
   const boardMouseDownHandler = (event, toolboxState) => {
     const { clientX, clientY, stroke, fill } = event;
+    if( boardState.activeTool === TOOL_ITEMS.ERASER) {
+      dispatchBoardAction({
+        type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
+        payload: { actionType: TOOL_ACTION_TYPES.ERASING },
+      });
+      return;
+    }
     dispatchBoardAction({
       type: BOARD_ACTIONS.DRAW_DOWN,
       payload: {
@@ -120,18 +143,29 @@ const BoardProvider = ({ children }) => {
 
   const boardMouseMoveHandler = (event) => {
     const { clientX, clientY } = event;
-    dispatchBoardAction({
-      type: BOARD_ACTIONS.DRAW_MOVE,
-      payload: {
-        clientX,
-        clientY,
-      },
-    });
+    if (boardState.toolActionType === TOOL_ACTION_TYPES.DRAWING) {
+      dispatchBoardAction({
+        type: BOARD_ACTIONS.DRAW_MOVE,
+        payload: {
+          clientX,
+          clientY,
+        },
+      });
+    } else if (boardState.toolActionType === TOOL_ACTION_TYPES.ERASING) {
+      dispatchBoardAction({
+        type: BOARD_ACTIONS.ERASE,
+        payload: {
+          clientX,
+          clientY,
+        },
+      });
+    }
   };
 
   const boardMouseUpHandler = () => {
     dispatchBoardAction({
-      type: BOARD_ACTIONS.DRAW_UP,
+      type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
+      payload: { actionType: TOOL_ACTION_TYPES.NONE },
     });
   };
 

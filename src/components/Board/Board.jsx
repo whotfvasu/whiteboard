@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import rough from "roughjs";
 import BoardContext from "../../store/board-context";
-import { TOOL_ACTION_TYPES, TOOL_ITEMS } from "../../constants";
+import { TOOL_ITEMS } from "../../constants";
 import ToolboxContext from "../../store/toolbox-context";
 
 const Board = () => {
@@ -12,7 +12,6 @@ const Board = () => {
     boardMouseDownHandler,
     boardMouseMoveHandler,
     boardMouseUpHandler,
-    toolActionType,
   } = useContext(BoardContext);
 
   const { toolboxState } = useContext(ToolboxContext);
@@ -56,12 +55,10 @@ const Board = () => {
   };
 
   const handleMouseMove = (event) => {
-    if (toolActionType !== TOOL_ACTION_TYPES.DRAWING) return;
     boardMouseMoveHandler(event);
   };
 
   const handleMouseUp = (event) => {
-    if (toolActionType !== TOOL_ACTION_TYPES.DRAWING) return;
     boardMouseUpHandler(event);
   };
 
@@ -69,6 +66,7 @@ const Board = () => {
     <div>
       <canvas
         ref={canvasRef}
+        id="canvas"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

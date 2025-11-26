@@ -1,10 +1,14 @@
 import React, { useContext, useState } from "react";
 import classes from "./Toolbar.module.css";
 import cx from "classnames";
-import { FaSlash, FaRegCircle, FaArrowRight } from "react-icons/fa";
-import { LuRectangleHorizontal } from "react-icons/lu";
-import { LuArrowRight } from "react-icons/lu";
-import { BsBrush } from "react-icons/bs";
+import {
+  LuSlash,
+  LuRectangleHorizontal,
+  LuArrowRight,
+  LuEraser,
+  LuCircle,
+  LuBrush,
+} from "react-icons/lu";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation.json";
 import BoardContext from "../../store/board-context";
@@ -15,8 +19,16 @@ const Toolbar = () => {
 
   return (
     <div className={`${classes.container} absolute`}>
-      <div className=" mx-2 relative -bottom-[14px] w-14">
+      <div className=" mx-4 relative -bottom-[14px] w-14">
         <Lottie animationData={animation} />
+      </div>
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.BRUSH,
+        })}
+        onClick={() => changeToolHandler(TOOL_ITEMS.BRUSH)}
+      >
+        <LuBrush />
       </div>
       <div
         className={cx(classes.toolItem, {
@@ -24,7 +36,7 @@ const Toolbar = () => {
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.LINE)}
       >
-        <FaSlash />
+        <LuSlash />
       </div>
       <div
         className={cx(classes.toolItem, {
@@ -40,7 +52,7 @@ const Toolbar = () => {
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.CIRCLE)}
       >
-        <FaRegCircle />
+        <LuCircle />
       </div>
       <div
         className={cx(classes.toolItem, {
@@ -50,14 +62,14 @@ const Toolbar = () => {
       >
         <LuArrowRight />
       </div>
+
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeTool === TOOL_ITEMS.BRUSH,
+          [classes.active]: activeTool === TOOL_ITEMS.ERASER,
         })}
-        onClick={() => changeToolHandler(TOOL_ITEMS.BRUSH)}
+        onClick={() => changeToolHandler(TOOL_ITEMS.ERASER)}
       >
-        <BsBrush />
-  
+        <LuEraser />
       </div>
     </div>
   );
