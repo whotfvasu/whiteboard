@@ -62,7 +62,9 @@ const Toolbox = () => {
 
       {SIZE_TOOL_TYPES.includes(activeTool) && (
         <div className={classes.selectOptionContainer}>
-          <div className={classes.toolboxLabel}>Brush Size</div>
+          <div className={classes.toolboxLabel}>
+            {activeTool === TOOL_ITEMS.TEXT ? "Font Size" : "Brush Size"}
+          </div>
           <input
             type="range"
             min={activeTool === TOOL_ITEMS.TEXT ? 12 : 1}

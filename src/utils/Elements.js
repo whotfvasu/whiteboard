@@ -5,7 +5,7 @@ import getStroke from "perfect-freehand";
 
 const gen = rough.generator();
 
-export const createRoughElement = (
+export const createElement = (
   id,
   x1,
   y1,
@@ -30,9 +30,7 @@ export const createRoughElement = (
     case TOOL_ITEMS.BRUSH:
       const brushElement = {
         id,
-        points: [
-          { x: x1, y: y1 },
-        ],
+        points: [{ x: x1, y: y1 }],
         path: new Path2D(getSvgPathFromStroke(getStroke([{ x: x1, y: y1 }]))),
         type,
         stroke,
@@ -67,6 +65,9 @@ export const createRoughElement = (
         [x4, y4],
       ];
       element.roughEle = gen.linearPath(points, options);
+      return element;
+    case TOOL_ITEMS.TEXT:
+      element.text = "";
       return element;
     default:
       throw new Error("Unknown element type: " + type);

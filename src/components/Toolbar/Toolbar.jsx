@@ -8,7 +8,9 @@ import {
   LuEraser,
   LuCircle,
   LuBrush,
+  LuBusFront,
 } from "react-icons/lu";
+import { RiText } from "react-icons/ri";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation.json";
 import BoardContext from "../../store/board-context";
@@ -70,6 +72,15 @@ const Toolbar = () => {
         onClick={() => changeToolHandler(TOOL_ITEMS.ERASER)}
       >
         <LuEraser />
+      </div>
+
+      <div
+        className={cx(classes.toolItem, {
+          [classes.active]: activeTool === TOOL_ITEMS.TEXT,
+        })}
+        onClick={() => changeToolHandler(TOOL_ITEMS.TEXT)}
+      >
+        <RiText />
       </div>
     </div>
   );
