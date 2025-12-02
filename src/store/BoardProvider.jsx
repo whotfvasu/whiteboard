@@ -36,13 +36,14 @@ const boardReducer = (state, action) => {
         { type: state.activeTool, stroke, fill, size }
       );
       const prevElements = state.elements;
+      const updatedElements = [...prevElements, newElement];
       return {
         ...state,
         toolActionType:
           state.activeTool === TOOL_ITEMS.TEXT
             ? TOOL_ACTION_TYPES.WRITING
             : TOOL_ACTION_TYPES.DRAWING,
-        elements: [...prevElements, newElement],
+        elements: updatedElements,
       };
     }
 
@@ -74,7 +75,11 @@ const boardReducer = (state, action) => {
             { x: moveX, y: moveY },
           ];
           newElements[index].path = new Path2D(
-            getSvgPathFromStroke(getStroke(newElements[index].points))
+            getSvgPathFromStroke(
+              getStroke(newElements[index].points, {
+                size: newElements[index].size || 2,
+              })
+            )
           );
           return {
             ...state,
@@ -128,7 +133,7 @@ const boardReducer = (state, action) => {
     }
 
     case BOARD_ACTIONS.UNDO: {
-      if (state.index === 0) return state;
+      if (state.index <= 0) return state;
       const newIndex = state.index - 1;
       return {
         ...state,
@@ -147,10 +152,44 @@ const boardReducer = (state, action) => {
       };
     }
 
+    case BOARD_ACTIONS.SET_INITIAL_ELEMENTS: {
+      return {
+        ...state,
+        elements: action.payload.elements,
+        history: [action.payload.elements],
+      };
+    }
+
+    case BOARD_ACTIONS.SET_CANVAS_ID:
+      return {
+        ...state,
+        canvasId: action.payload.canvasId,
+      };
+
+    case BOARD_ACTIONS.SET_CANVAS_ELEMENTS:
+      return {
+        ...state,
+        elements: action.payload.elements,
+      };
+
+    case BOARD_ACTIONS.SET_HISTORY:
+      return {
+        ...state,
+        history: [action.payload.elements],
+      };
+
+    case BOARD_ACTIONS.SET_USER_LOGIN_STATUS:
+      return {
+        ...state,
+        isUserLoggedIn: action.payload.isUserLoggedIn,
+      };
+
     default:
       return state;
   }
 };
+
+const isUserLoggedIn = !!localStorage.getItem("whiteboard_user_token");
 
 const initialBoardState = {
   activeTool: TOOL_ITEMS.BRUSH,
@@ -158,6 +197,8 @@ const initialBoardState = {
   elements: [],
   history: [[]],
   index: 0,
+  canvasId: "",
+  isUserLoggedIn: isUserLoggedIn,
 };
 
 const BoardProvider = ({ children }) => {
@@ -256,10 +297,48 @@ const BoardProvider = ({ children }) => {
     });
   }, []);
 
+  const setCanvasId = (canvasId) => {
+    dispatchBoardAction({
+      type: BOARD_ACTIONS.SET_CANVAS_ID,
+      payload: {
+        canvasId,
+      },
+    });
+  };
+
+  const setElements = (elements) => {
+    dispatchBoardAction({
+      type: BOARD_ACTIONS.SET_CANVAS_ELEMENTS,
+      payload: {
+        elements,
+      },
+    });
+  };
+
+  const setHistory = (elements) => {
+    dispatchBoardAction({
+      type: BOARD_ACTIONS.SET_HISTORY,
+      payload: {
+        elements,
+      },
+    });
+  };
+
+  const setUserLoginStatus = (isUserLoggedIn) => {
+    dispatchBoardAction({
+      type: BOARD_ACTIONS.SET_USER_LOGIN_STATUS,
+      payload: {
+        isUserLoggedIn,
+      },
+    });
+  };
+
   const boardContextValue = {
     activeTool: boardState.activeTool,
     elements: boardState.elements,
     toolActionType: boardState.toolActionType,
+    isUserLoggedIn: boardState.isUserLoggedIn,
+    canvasId: boardState.canvasId,
     changeToolHandler,
     boardMouseDownHandler,
     boardMouseMoveHandler,
@@ -267,6 +346,10 @@ const BoardProvider = ({ children }) => {
     textAreaBlurHandler,
     undo: boardUndoHandler,
     redo: boardRedoHandler,
+    setCanvasId,
+    setElements,
+    setHistory,
+    setUserLoginStatus,
   };
 
   return (

@@ -31,9 +31,14 @@ export const createElement = (
       const brushElement = {
         id,
         points: [{ x: x1, y: y1 }],
-        path: new Path2D(getSvgPathFromStroke(getStroke([{ x: x1, y: y1 }]))),
+        path: new Path2D(
+          getSvgPathFromStroke(
+            getStroke([{ x: x1, y: y1 }], { size: size || 2 })
+          )
+        ),
         type,
         stroke,
+        size,
       };
       return brushElement;
     case TOOL_ITEMS.LINE:
@@ -115,7 +120,7 @@ export const isPointNearElement = (element, pointX, pointY) => {
           pointX,
           pointY
         ) ||
-        isPointCloseToLine (x1, y1 + textHeight, x1, y1, pointX, pointY)
+        isPointCloseToLine(x1, y1 + textHeight, x1, y1, pointX, pointY)
       );
     default:
       throw new Error("Type not recognized");
