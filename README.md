@@ -2,7 +2,7 @@
 
 A full-stack collaborative whiteboard application with persistent storage, user authentication, and real-time canvas management.
 
-![Whiteboard Application](./public/screenshot.png)
+![Whiteboard Application](./public/screenshot1.png)
 
 ![Dashboard Interface](./public/screenshot2.png)
 
