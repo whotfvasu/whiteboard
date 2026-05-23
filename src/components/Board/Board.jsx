@@ -1,12 +1,41 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import rough from "roughjs";
 import BoardContext from "../../store/board-context";
+import SocketContext from "../../store/SocketProvider";
 import { TOOL_ACTION_TYPES, TOOL_ITEMS } from "../../constants";
 import ToolboxContext from "../../store/toolbox-context";
 import classes from "./Board.module.css";
 import { useParams } from "react-router-dom";
 import { createElement, getSvgPathFromStroke } from "../../utils/Elements";
 import getStroke from "perfect-freehand";
+
+const rehydrateElements = (rawElements) =>
+  (rawElements || []).map((element) => {
+    if (element.type === TOOL_ITEMS.BRUSH) {
+      const path = new Path2D(
+        getSvgPathFromStroke(
+          getStroke(element.points, { size: element.size || 2 })
+        )
+      );
+      return { ...element, path };
+    } else if (element.type === TOOL_ITEMS.TEXT) {
+      return element;
+    } else {
+      return createElement(
+        element.id,
+        element.x1,
+        element.y1,
+        element.x2,
+        element.y2,
+        {
+          type: element.type,
+          stroke: element.stroke,
+          fill: element.fill,
+          size: element.size,
+        }
+      );
+    }
+  });
 
 const Board = () => {
   const { canvasId } = useParams();
@@ -27,6 +56,8 @@ const Board = () => {
   } = useContext(BoardContext);
 
   const { toolboxState } = useContext(ToolboxContext);
+  const { socket } = useContext(SocketContext);
+  const isRemoteUpdateRef = useRef(false);
 
   const token = localStorage.getItem("whiteboard_user_token");
 
@@ -49,32 +80,7 @@ const Board = () => {
           console.log("Canvas data loaded:", data);
           setCanvasId(canvasId);
 
-          const recreatedElements = (data.elements || []).map((element) => {
-            if (element.type === TOOL_ITEMS.BRUSH) {
-              const path = new Path2D(
-                getSvgPathFromStroke(
-                  getStroke(element.points, { size: element.size || 2 })
-                )
-              );
-              return { ...element, path };
-            } else if (element.type === TOOL_ITEMS.TEXT) {
-              return element;
-            } else {
-              return createElement(
-                element.id,
-                element.x1,
-                element.y1,
-                element.x2,
-                element.y2,
-                {
-                  type: element.type,
-                  stroke: element.stroke,
-                  fill: element.fill,
-                  size: element.size,
-                }
-              );
-            }
-          });
+          const recreatedElements = rehydrateElements(data.elements);
 
           setElements(recreatedElements);
           setHistory(recreatedElements);
@@ -92,6 +98,33 @@ const Board = () => {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
   }, []);
+
+  useEffect(() => {
+    if (!socket || !canvasId) return;
+
+    socket.emit("joinCanvas", canvasId);
+
+    const handleRemoteUpdate = (incomingElements) => {
+      isRemoteUpdateRef.current = true;
+      setElements(rehydrateElements(incomingElements));
+    };
+
+    socket.on("drawingUpdate", handleRemoteUpdate);
+
+    return () => {
+      socket.off("drawingUpdate", handleRemoteUpdate);
+      socket.emit("leaveCanvas", canvasId);
+    };
+  }, [socket, canvasId]);
+
+  useEffect(() => {
+    if (!socket || !canvasId) return;
+    if (isRemoteUpdateRef.current) {
+      isRemoteUpdateRef.current = false;
+      return;
+    }
+    socket.emit("drawingUpdate", { canvasId, elements });
+  }, [elements, socket, canvasId]);
 
   useEffect(() => {
     if (!canvasId || !token) return;

@@ -5,6 +5,7 @@ import Toolbar from "./components/Toolbar/Toolbar";
 import Toolbox from "./components/Toolbox/Toolbox";
 import BoardProvider from "./store/BoardProvider";
 import ToolboxProvider from "./store/ToolboxProvider";
+import { SocketProvider } from "./store/SocketProvider";
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import { useContext } from "react";
 import BoardContext from "./store/board-context";
@@ -89,12 +90,14 @@ const AppContent = () => {
 
 function App() {
   return (
-    <ToolboxProvider>
-      <BoardProvider>
-        <Toaster />
-        <AppContent />
-      </BoardProvider>
-    </ToolboxProvider>
+    <SocketProvider>
+      <ToolboxProvider>
+        <BoardProvider>
+          <Toaster />
+          <AppContent />
+        </BoardProvider>
+      </ToolboxProvider>
+    </SocketProvider>
   );
 }
 
